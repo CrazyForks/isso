@@ -3,8 +3,7 @@
 import unittest
 import textwrap
 
-from isso import config
-from isso.utils import html
+from isso import config, html
 
 
 class TestHTML(unittest.TestCase):

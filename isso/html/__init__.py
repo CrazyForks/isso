@@ -1,0 +1,88 @@
+import re
+
+import bleach
+
+
+class Sanitizer(object):
+
+    # pattern to match a valid class attribute for code tags
+    code_language_pattern = re.compile(r"^language-[a-zA-Z0-9]{1,20}$")
+
+    @staticmethod
+    def allow_attribute_class(tag, name, value):
+        return name == "class" and bool(Sanitizer.code_language_pattern.match(value))
+
+    def __init__(self, elements, attributes):
+        # attributes found in Sundown's HTML serializer [1]
+        # - except for <img> tag, because images are not generated anyways.
+        # - sub and sup added
+        #
+        # [1] https://github.com/vmg/sundown/blob/master/html/html.c
+        self.elements = ["a", "p", "hr", "br", "ol", "ul", "li",
+                         "pre", "code", "blockquote",
+                         "del", "ins", "strong", "em",
+                         "h1", "h2", "h3", "h4", "h5", "h6", "sub", "sup",
+                         "table", "thead", "tbody", "th", "td"] + elements
+
+        # allowed attributes for tags
+        self.attributes = {
+            "table": ["align"],
+            "a": ["href"],
+            "code": Sanitizer.allow_attribute_class,
+            "*": attributes
+        }
+
+    def sanitize(self, text):
+        clean_html = bleach.clean(text, tags=self.elements, attributes=self.attributes, strip=True)
+
+        def set_links(attrs, new=False):
+            # Linker can misinterpret text as a domain name and create new invalid links.
+            # To prevent this, we only allow existing links to be modified.
+            if new:
+                return None
+
+            href_key = (None, u'href')
+
+            if href_key not in attrs:
+                return attrs
+            if attrs[href_key].startswith(u'mailto:'):
+                return attrs
+
+            rel_key = (None, u'rel')
+            rel_values = [val for val in attrs.get(rel_key, u'').split(u' ') if val]
+
+            for value in [u'nofollow', u'noopener']:
+                if value not in [rel_val.lower() for rel_val in rel_values]:
+                    rel_values.append(value)
+
+            attrs[rel_key] = u' '.join(rel_values)
+            return attrs
+
+        linker = bleach.linkifier.Linker(callbacks=[set_links])
+        return linker.linkify(clean_html)
+
+
+class Markup(object):
+
+    def __init__(self, conf):
+        self.conf = conf.section('markup')
+
+        if self.conf.get('renderer') == "misaka":
+            # We do not want to depend on Misaka unless it is actually used
+            from isso.html.misaka import MisakaMarkdown
+            self.parser = MisakaMarkdown(self.conf.section('markup.misaka'))
+        else:
+            from isso.html.mistune import MistuneMarkdown
+            self.parser = MistuneMarkdown(self.conf.section('markup.mistune'))
+
+        # Filter out empty strings:
+        allowed_elements = [x for x in conf.getlist("allowed-elements") if x]
+        allowed_attributes = [x for x in conf.getlist("allowed-attributes") if x]
+
+        # If images are allowed, source element should be allowed as well
+        if 'img' in allowed_elements and 'src' not in allowed_attributes:
+            allowed_attributes.append('src')
+        self.sanitizer = Sanitizer(allowed_elements, allowed_attributes)
+
+    def render(self, text):
+        return self.sanitizer.sanitize(self.parser.render(text))
