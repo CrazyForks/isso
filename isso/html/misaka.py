@@ -19,18 +19,27 @@ class Unofficial(misaka.HtmlRenderer):
 
 
 class MisakaMarkdown(Markdown):
-    def __init__(self, conf):
-        self.flags = conf.getlist("flags")
-        self.extensions = conf.getlist("options")
+    _flags = []
+    _extensions = ("autolink", "fenced-code", "no-intra-emphasis", "strikethrough", "superscript")
 
-        # Normalize render flags and extensions for Misaka 2.0, which uses
-        # `dashed-case` instead of `snake_case` (Misaka 1.x) for options.
-        self.flags = [x.replace("_", "-") for x in self.flags]
-        self.extensions = [x.replace("_", "-") for x in self.extensions]
+    def __init__(self, conf=None):
+        if conf is not None:
+            if 'flags' in conf:
+                self._flags = conf.getlist("flags")
+            if 'options' in conf:
+                self._extensions = conf.getlist("options")
 
-        renderer = Unofficial(flags=self.flags)
-        self.md = misaka.Markdown(renderer, extensions=self.extensions)
+            # Normalize render flags and extensions for Misaka 2.0, which uses
+            # `dashed-case` instead of `snake_case` (Misaka 1.x) for options.
+            self._flags = [x.replace("_", "-") for x in self._flags]
+            self._extensions = [x.replace("_", "-") for x in self._extensions]
+
+        renderer = Unofficial(flags=self._flags)
+        self.md = misaka.Markdown(renderer, extensions=self._extensions)
 
     @property
-    def markdown(self):
+    def _markdown(self):
         return self.md
+
+    def _render(self, text: str) -> str:
+        return self.md(text)
