@@ -22,7 +22,7 @@ class TestHTMLMisaka(unittest.TestCase):
             ("http://example.org/", '<p>http://example.org/</p>')]
 
         for (markup, expected) in examples:
-            self.assertEqual(convert.render(markup), expected)
+            self.assertEqual(expected, convert.render(markup))
 
     def test_markdown_plugins(self):
         conf = config.new({
@@ -37,7 +37,7 @@ class TestHTMLMisaka(unittest.TestCase):
             ("sup^(script)", "<p>sup<sup>script</sup></p>")]
 
         for (markup, expected) in examples:
-            self.assertEqual(convert.render(markup), expected)
+            self.assertEqual(expected, convert.render(markup))
 
     def test_github_flavoured_markdown(self):
         conf = config.new({
@@ -104,11 +104,11 @@ class TestHTMLMisaka(unittest.TestCase):
             }
         })
         convert = MisakaMarkdown(conf.section('markup.misaka'))
-        self.assertEqual(convert.render("foo_bar_baz"), '<p>foo_bar_baz</p>')
+        self.assertEqual('<p>foo_bar_baz</p>', convert.render("foo_bar_baz"))
 
         conf.set("markup.misaka", "options", "no-intra-emphasis")  # dashed-case
         convert = MisakaMarkdown(conf.section('markup.misaka'))
-        self.assertEqual(convert.render("foo_bar_baz"), '<p>foo_bar_baz</p>')
+        self.assertEqual('<p>foo_bar_baz</p>', convert.render("foo_bar_baz"))
 
     def test_code_blocks(self):
         convert = MisakaMarkdown()
@@ -118,4 +118,4 @@ class TestHTMLMisaka(unittest.TestCase):
             ("    This is a four-character indent. <hello>", "<p><pre><code>This is a four-character indent. &lt;hello&gt;\n</code></pre></p>")]
 
         for (markup, expected) in examples:
-            self.assertEqual(convert.render(markup), expected)
+            self.assertEqual(expected, convert.render(markup))
