@@ -27,6 +27,23 @@ Misaka allows HTML expressions like ``<em>Hi</em>`` in Markdown. This expression
 will be rendered to HTML as is: ``<em>Hi</em>``. Mistune takes a stricter approach
 and replaces any HTML element with rendered text like this: ``&lt;em&gt;Hi&lt;/em&gt;``.
 
+Strong and emphasis
+^^^^^^^^^
+
+Misaka interprets asterisks like this:
+
+1. \*\*word\*\*: Strong **word**
+2. \*word\*: Emphasized *word*
+3. \*\*word1\*\*\*word2\*: Strong **word1** and emphasized *word2*
+
+Mistune is the same on the first two points but does not interpret asterisks inside words:
+
+3. \*\*word1\*\*\*word2\*: Renders as \*\*word1\*\*\*word2\*
+
+If you want to have the same rendered result with Mistune, use underscores for emphasis:
+
+3. \*\*word1\*\*\_word2\_: Strong **word1** and emphasized *word2*
+
 Fenced code
 ^^^^^^^^^
 
