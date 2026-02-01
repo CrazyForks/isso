@@ -15,7 +15,7 @@ class TestHTMLMisaka(unittest.TestCase):
                 "flags": ""
             }
         })
-        convert = MisakaMarkdown(conf.section("markup.misaka"))
+        convert = MisakaMarkdown(conf)
         examples = [
             ("*Ohai!*", "<p><em>Ohai!</em></p>"),
             ("<em>Hi</em>", "<p><em>Hi</em></p>"),
@@ -31,7 +31,7 @@ class TestHTMLMisaka(unittest.TestCase):
                 "flags": ""
             }
         })
-        convert = MisakaMarkdown(conf.section('markup.misaka'))
+        convert = MisakaMarkdown(conf)
         examples = [
             ("~~strike~~ through", "<p><del>strike</del> through</p>"),
             ("sup^(script)", "<p>sup<sup>script</sup></p>")]
@@ -46,7 +46,7 @@ class TestHTMLMisaka(unittest.TestCase):
                 "flags": ""
             }
         })
-        convert = MisakaMarkdown(conf.section('markup.misaka'))
+        convert = MisakaMarkdown(conf)
 
         # without lang
         _in = textwrap.dedent("""\
@@ -103,11 +103,11 @@ class TestHTMLMisaka(unittest.TestCase):
                 "flags": "",
             }
         })
-        convert = MisakaMarkdown(conf.section('markup.misaka'))
+        convert = MisakaMarkdown(conf)
         self.assertEqual('<p>foo_bar_baz</p>', convert.render("foo_bar_baz"))
 
         conf.set("markup.misaka", "options", "no-intra-emphasis")  # dashed-case
-        convert = MisakaMarkdown(conf.section('markup.misaka'))
+        convert = MisakaMarkdown(conf)
         self.assertEqual('<p>foo_bar_baz</p>', convert.render("foo_bar_baz"))
 
     def test_code_blocks(self):

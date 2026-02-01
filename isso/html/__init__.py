@@ -70,7 +70,7 @@ class Markup(object):
         if conf_markup.get('renderer') == "misaka":
             # We do not want to depend on Misaka unless it is actually used
             from isso.html.misaka import MisakaMarkdown
-            self.parser = MisakaMarkdown(conf.section('markup.misaka'))
+            self.parser = MisakaMarkdown(conf)
         else:
             from isso.html.mistune import MistuneMarkdown
             self.parser = MistuneMarkdown(conf.section('markup.mistune'))
