@@ -102,13 +102,6 @@ class IssoParser(ConfigParser):
         """
         super(IssoParser, self).__init__(allow_no_value=True, interpolation=None, *args, **kwargs)
 
-    def has_option(self, section, key):
-        """
-        Return true if the key exists in the given section, regardless of whether a value was set. Return false
-        otherwise.
-        """
-        return super(IssoParser, self).has_option(section, key)
-
     def get(self, section, key, **kwargs):
         value = super(IssoParser, self).get(section, key, **kwargs)
         return os.path.expandvars(value)
