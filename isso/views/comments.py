@@ -5,9 +5,9 @@ import re
 import time
 import functools
 import json  # json.dumps to put URL in <script>
-import pkg_resources
 
 from configparser import NoOptionError
+from importlib.resources import files
 from datetime import datetime, timedelta
 from html import escape
 from io import BytesIO as StringIO
@@ -335,9 +335,12 @@ class API(object):
         if not valid:
             return BadRequest(reason)
 
-        for field in ("author", "email", "website"):
+        for field in ("author", "email"):
             if data.get(field) is not None:
                 data[field] = escape(data[field], quote=False)
+
+        if data.get("website") is not None:
+            data["website"] = escape(data["website"], quote=True)
 
         if data.get("website"):
             data["website"] = normalize(data["website"])
@@ -547,6 +550,13 @@ class API(object):
         valid, reason = API.verify(data)
         if not valid:
             return BadRequest(reason)
+
+        for field in ("author",):
+            if data.get(field) is not None:
+                data[field] = escape(data[field], quote=False)
+
+        if data.get("website") is not None:
+            data["website"] = escape(data["website"], quote=True)
 
         data['modified'] = time.time()
 
@@ -794,6 +804,21 @@ class API(object):
             return Response("Comment has been activated", 200)
         elif action == "edit":
             data = request.json
+
+            for key in set(data.keys()) - set(["text", "author", "website"]):
+                data.pop(key)
+
+            valid, reason = API.verify(data)
+            if not valid:
+                return BadRequest(reason)
+
+            for field in ("author",):
+                if data.get(field) is not None:
+                    data[field] = escape(data[field], quote=False)
+
+            if data.get("website") is not None:
+                data["website"] = escape(data["website"], quote=True)
+
             with self.isso.lock:
                 rv = self.comments.update(id, data)
             for key in set(rv.keys()) - API.FIELDS:
@@ -1391,7 +1416,7 @@ class API(object):
         </body>
     """
     def demo(self, env, req):
-        index = pkg_resources.resource_filename('isso', 'demo/index.html')
+        index = str(files('isso').joinpath('demo/index.html'))
         return send_from_directory(os_path.dirname(index), 'index.html', env)
 
     """
