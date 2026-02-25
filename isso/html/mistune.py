@@ -22,7 +22,7 @@ class MistuneMarkdown(Markdown):
 
         hard_wrap = True if 'hard_wrap' in self._parameters else False
 
-        logging.info("Loading Mistune with plugins: [%s] and parameters: [%s]", self._plugins, self._parameters)
+        logging.info("Loading Mistune with plugins: %s and parameters: %s", self._plugins, self._parameters)
 
         # The isso.cfg syntax does not allow to set a parameter like escape to False. With Misaka, HTML was not always
         # escaped, but it seems prudent to enable that here.
