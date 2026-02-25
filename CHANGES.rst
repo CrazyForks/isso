@@ -38,8 +38,9 @@ Breaking Changes
   (tagged) version
 - Disavow IE10 compatibility: (Not-so) recent changes mean that Isso is no
   longer compatible (`#1022`, ix5)
-- The Markdown rendering engine now defaults to Mistune, see
-  :doc:`Migration from Misaka to Mistune <guides/mistune>` for differences to Misaka.
+- The Markdown rendering engine Misaka has been deprecated. Please start using
+  Mistune, see :doc:`Migration from Misaka to Mistune <guides/mistune>` for
+  differences to Misaka.
 
 .. _#970: https://github.com/isso-comments/isso/pull/970
 .. _#1022: https://github.com/isso-comments/isso/pull/1022

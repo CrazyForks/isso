@@ -5,13 +5,16 @@ Introduction
 ------------
 
 Misaka was the rendering engine for converting Markdown to HTML in previous
-versions of Isso. It has been replaced by Mistune. The Markdown syntax and
+versions of Isso. It is being replaced by Mistune. The Markdown syntax and
 options between these engines is differing and this is to document the
 differences.
 
-For Misaka, plugins are configured with the ``options`` setting. Misaka actually
-refers to plugins as extensions. The ``options`` setting must be in section
-``[markup.misaka]`` in the server configuration file ``isso.cfg``.
+See :doc:`Server Configuration <../reference/server-config>` how to set
+Mistune as the new rendering engine.
+
+For Misaka, plugins are configured with the ``options`` setting. Misaka
+actually refers to plugins as extensions. The ``options`` setting must be
+in section ``[markup.misaka]`` in the server configuration file ``isso.cfg``.
 
 For Mistune, plugins are configured with the ``plugins`` setting. The ``plugins``
 setting must be in section ``[markup.mistune]`` in the server configuration file
@@ -64,7 +67,7 @@ Superscript
 ^^^^^^^^^^^
 
 This plugin exists in both engines with the same name ``superscript``. The
-Markdown syntax is differing however.
+Markdown syntax is different however.
 
 Misaka: ``^(superscripted_text)``
 
