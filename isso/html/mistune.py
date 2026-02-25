@@ -27,5 +27,5 @@ class MistuneMarkdown(Markdown):
     def _markdown(self):
         return self.md
 
-    def _render(self, text:str) -> str:
+    def _render(self, text: str) -> str:
         return self.md(text)

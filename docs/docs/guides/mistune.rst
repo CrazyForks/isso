@@ -1,5 +1,5 @@
 Migration from Misaka to Mistune
-=============
+================================
 
 Introduction
 ------------

@@ -13,7 +13,7 @@ class Markdown(ABC):
     def _render(self, text: str) -> str:
         pass
 
-    def render(self, text:str) -> str:
+    def render(self, text: str) -> str:
         rv = self._render(text).rstrip("\n")
         if rv.startswith("<p>") or rv.endswith("</p>"):
             return rv
