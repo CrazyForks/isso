@@ -124,7 +124,7 @@ In chronological order:
   * Testing for moderation and unsubscribe
 
 * Fabian Ritzmann @ritzmann
-  * Add Mistune as new default Markdown rendering engine
+  * Add Mistune as new Markdown rendering engine
 
 * [Your name or handle] <[email or website]>
   * [Brief summary of your changes]
